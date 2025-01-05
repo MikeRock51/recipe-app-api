@@ -4,7 +4,7 @@ LABEL maintainer='mikerock.tech'
 ENV PYTHONUNBUFFERED=1
 
 COPY ./requirements.txt /app/requirements.txt
-COPY ./requirements.txt /app/requirements.dev.txt
+COPY ./requirements.dev.txt /app/requirements.dev.txt
 COPY ./app /app
 WORKDIR /app
 EXPOSE 8000
