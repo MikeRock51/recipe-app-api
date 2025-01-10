@@ -4,3 +4,7 @@ exclude =
     manage.py,
     settings.py,
     __pycache__,
+
+max-line-length=88
+max-complexity=39
+ignore = E203, W503, E501, F401, F403, F405, F841, E731, E741, E722, E712, E711, E704, E701, E704, E702
