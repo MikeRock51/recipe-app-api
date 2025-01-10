@@ -3,8 +3,8 @@
 """
 
 from unittest.mock import patch
-from psycopg2 import OperationalError as Psycopg2OperationalError
 from django.core.management import call_command
+from psycopg2 import OperationalError as Psycopg2OperationalError
 from django.db.utils import OperationalError
 from django.test import SimpleTestCase
 
