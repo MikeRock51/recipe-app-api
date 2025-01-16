@@ -13,17 +13,15 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         """Command entry point"""
-        self.stdout.write(self.style.HTTP_INFO("Waiting for database..."))
+        self.stdout.write(self.style.HTTP_INFO('Waiting for database...'))
         db_up = False
 
         while db_up is False:
             try:
-                self.check(databases=["default"])
+                self.check(databases=['default'])
                 db_up = True
             except (Psycopg2OperationalError, OperationalError):
-                self.stdout.write(
-                    self.style.WARNING("Database not available, waiting 1 second...")
-                )
+                self.stdout.write(self.style.WARNING('Database not available, waiting 1 second...'))
                 time.sleep(1)
 
-        self.stdout.write(self.style.SUCCESS("Database is available!"))
+        self.stdout.write(self.style.SUCCESS('Database is available!'))
