@@ -7,7 +7,7 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 
-CREATE_USER_URL = reverse("users:create")
+CREATE_USER_URL = reverse("user:create")
 
 
 def create_user(**params):
@@ -33,7 +33,7 @@ class PublicUserApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
         self.assertNotIn("password", res.data)
 
-        user = get_user_model().objects.get(payload['email'])
+        user = get_user_model().objects.get(email=payload['email'])  # Fix the get method call
         self.assertTrue(user.check_password(payload["password"]))
 
     def test_user_email_exists_fails(self):
