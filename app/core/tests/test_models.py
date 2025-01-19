@@ -2,6 +2,7 @@
 
 from django.test import TestCase
 from django.contrib.auth import get_user_model
+
 from core import models
 from decimal import Decimal
 
@@ -55,7 +56,7 @@ class ModelTests(TestCase):
 
     def test_recipe_model_create_success(self):
         """Tests that a recipe is created successfully"""
-        user = get_user_model().objects.create_user(TEST_USER_DETAILS)
+        user = get_user_model().objects.create_user(**TEST_USER_DETAILS)
 
         recipe = models.Recipe.objects.create(
             title="Test Recipe",
