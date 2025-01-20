@@ -48,11 +48,12 @@ class PrivateRecipeAPITest(TestCase):
 
     def setUp(self):
         self.client = APIClient()
-        self.user = get_user_model().objects.create(
-            email="test@email.com", password="testPassword"
+        self.user = get_user_model().objects.create_user(
+            email="test@email.com",
+            password="testPassword"
         )
 
-        self.client.force_authenticate(user=self.user)
+        self.client.force_authenticate(self.user)
 
     def test_retrive_recipe(self):
         """Test that authenticated users can retrieve a list of recipes"""
