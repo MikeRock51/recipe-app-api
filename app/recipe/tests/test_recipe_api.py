@@ -15,6 +15,11 @@ from recipe.serializers import RecipeSerializer
 RECIPES_URL = reverse("recipe:recipe-list")
 
 
+def get_recipe_detail_url(id):
+    """Creates and returns a recipe detail URL"""
+    return reverse("recipe:recipe-detail", args=[id])
+
+
 def create_recipe(user, **params):
     """Creates a test recipe with default or given params"""
     default = {
@@ -80,6 +85,17 @@ class PrivateRecipeAPITest(TestCase):
 
         recipes = Recipe.objects.filter(user=self.user)
         serializer = RecipeSerializer(recipes, many=True)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.data, serializer.data)
+
+    def test_view_recipe_detail(self):
+        """Test viewing a recipe detail"""
+        recipe = create_recipe(user=self.user)
+        url = get_recipe_detail_url(recipe.id)
+
+        res = self.client.get(url)
+        serializer = RecipeSerializer(recipe)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, serializer.data)
