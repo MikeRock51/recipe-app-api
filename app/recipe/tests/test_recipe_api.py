@@ -10,7 +10,10 @@ from rest_framework.test import APIClient
 from core.models import Recipe
 from decimal import Decimal
 
-from recipe.serializers import RecipeSerializer
+from recipe.serializers import (
+    RecipeSerializer,
+    RecipeDetailSerializer,
+)
 
 RECIPES_URL = reverse("recipe:recipe-list")
 
@@ -95,7 +98,7 @@ class PrivateRecipeAPITest(TestCase):
         url = get_recipe_detail_url(recipe.id)
 
         res = self.client.get(url)
-        serializer = RecipeSerializer(recipe)
+        serializer = RecipeDetailSerializer(recipe)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, serializer.data)
