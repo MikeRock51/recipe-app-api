@@ -17,6 +17,14 @@ from recipe.serializers import (
 
 RECIPES_URL = reverse("recipe:recipe-list")
 
+TEST_RECIPE = {
+    "title": "Pounded Yam and Efo Riro",
+    "time_minutes": 45,
+    "price": Decimal("99.99"),
+    "description": "Delicious meal",
+    "link": "https://www.youtube.com/watch?v=8hMuhCKyhuA",
+}
+
 
 def get_recipe_detail_url(id):
     """Creates and returns a recipe detail URL"""
@@ -25,14 +33,7 @@ def get_recipe_detail_url(id):
 
 def create_recipe(user, **params):
     """Creates a test recipe with default or given params"""
-    default = {
-        "title": "Pounded Yam and Efo Riro",
-        "time_minutes": 45,
-        "price": Decimal("99.99"),
-        "description": "Delicious meal",
-        "link": "https://www.youtube.com/watch?v=8hMuhCKyhuA",
-    }
-
+    default = TEST_RECIPE
     default.update(params)
 
     return Recipe.objects.create(user=user, **default)
@@ -102,3 +103,17 @@ class PrivateRecipeAPITest(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, serializer.data)
+
+    def test_create_recipe(self):
+        """Test that recipe gets created successfully"""
+        payload = TEST_RECIPE
+
+        res = self.client.post(RECIPES_URL, payload)
+
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+
+        recipe = Recipe.objects.get(id=res.data['id'])
+        for key, value in payload.items():
+            self.assertEqual(getattr(recipe, key), value)
+
+        self.assertEqual(recipe.user, self.user)
