@@ -13,6 +13,11 @@ TEST_USER_DETAILS = {
 }
 
 
+def create_user(email='tester@email.com', password='Pass123'):
+    """Creates a test use"""
+    return models.User.objects.create_user(email=email, password=password)
+
+
 class ModelTests(TestCase):
     """Model testing class"""
 
@@ -67,3 +72,10 @@ class ModelTests(TestCase):
         )
 
         self.assertEqual(str(recipe), recipe.title)
+
+    def test_create_tag(self):
+        """Tests creating a new tag"""
+        user = create_user()
+        tag = models.Tag.objects.create(user=user, name='Test Tag')
+
+        self.assertEqual(str(tag), tag.name)
