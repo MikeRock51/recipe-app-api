@@ -70,7 +70,7 @@ class PrivateTagTests(TestCase):
 
     def test_update_tag(self):
         """Tests updating a tag"""
-        tag = Tag.objects.create(user=self.user, name="Delicious")
+        tag = create_tag(user=self.user, name="Delicious")
         tag_url = get_detail_url(tag.id)
 
         payload = {'name': 'Delicioso'}
@@ -81,3 +81,16 @@ class PrivateTagTests(TestCase):
 
         tag.refresh_from_db()
         self.assertEqual(tag.name, payload['name'])
+
+    def test_delete_tag(self):
+        """Test deleting a tag"""
+        tag = create_tag(user=self.user, name='Snacky')
+
+        tag_url = get_detail_url(tag.id)
+
+        res = self.client.delete(tag_url)
+
+        self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
+
+        tag_exists = Tag.objects.filter(id=tag.id).exists()
+        self.assertFalse(tag_exists)
