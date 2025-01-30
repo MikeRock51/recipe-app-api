@@ -256,3 +256,31 @@ class PrivateRecipeAPITest(TestCase):
 
         for tag in payload['tags']:
             self.assertIn(Tag.objects.get(name=tag['name'], user=self.user), recipe.tags.all())
+
+    def test_create_tag_on_update(self):
+        """Test new tags gets created on update"""
+        recipe = create_recipe(user=self.user)
+        payload = {'tags': [{'name': 'Lunch'}]}
+        url = get_recipe_detail_url(recipe.id)
+
+        res = self.client.patch(url, payload) # format
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+        new_tag = Tag.objects.get(user=self.user, name=payload['tags'][0]['name'])
+        self.assertIn(new_tag, recipe.tags.all())
+
+    def test_update_replace_tags(self):
+        """Test replacing the existing tags on a recipe during update"""
+        breakfast_tag = create_tag(user=self.user, name='Breakfast')
+        recipe = create_recipe(user=self.user)
+        recipe.tags.add(breakfast_tag)
+
+        lunch_tag = create_tag(user=self.user, name="Lunch")
+        payload = {'tags': [{'name': lunch_tag.name}]}
+        url = get_recipe_detail_url(recipe.id)
+        res = self.client.patch(url, payload)
+        recipe_tags = recipe.tags.all()
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertIn(lunch_tag, recipe_tags)
+        self.assertNotIn(breakfast_tag, recipe_tags)
