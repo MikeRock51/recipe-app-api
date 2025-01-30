@@ -263,7 +263,7 @@ class PrivateRecipeAPITest(TestCase):
         payload = {'tags': [{'name': 'Lunch'}]}
         url = get_recipe_detail_url(recipe.id)
 
-        res = self.client.patch(url, payload) # format
+        res = self.client.patch(url, payload, format='json')
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
         new_tag = Tag.objects.get(user=self.user, name=payload['tags'][0]['name'])
@@ -278,9 +278,23 @@ class PrivateRecipeAPITest(TestCase):
         lunch_tag = create_tag(user=self.user, name="Lunch")
         payload = {'tags': [{'name': lunch_tag.name}]}
         url = get_recipe_detail_url(recipe.id)
-        res = self.client.patch(url, payload)
+        res = self.client.patch(url, payload, format='json')
         recipe_tags = recipe.tags.all()
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertIn(lunch_tag, recipe_tags)
         self.assertNotIn(breakfast_tag, recipe_tags)
+
+    def test_update_clear_tags(self):
+        """Tests clearing all tags on a recipe during update"""
+        breakfast_tag = create_tag(user=self.user, name='Breakfast')
+        recipe = create_recipe(user=self.user)
+        recipe.tags.add(breakfast_tag)
+
+        payload = {'tags': []}
+        url = get_recipe_detail_url(recipe.id)
+        res = self.client.patch(url, payload, format='json')
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(recipe.tags.count(), 0)
+        self.assertNotIn(breakfast_tag, recipe.tags.all())
