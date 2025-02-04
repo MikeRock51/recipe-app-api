@@ -76,7 +76,7 @@ class PrivateIngredientAPITest(TestCase):
         payload = {'name': 'Curry'}
 
         url = detail_url(ingredient.id)
-        self.client.patch(url, payload)
+        res = self.client.patch(url, payload)
 
         ingredient.refresh_from_db()
         self.assertEqual(res.status_code, status.HTTP_200_OK)
