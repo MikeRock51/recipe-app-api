@@ -20,6 +20,7 @@ def create_ingredient(**params):
     """Create and return a new ingredient"""
     return Ingredient.objects.create(**params)
 
+
 def detail_url(ingredient_id):
     """Return ingredient detail URL"""
     return reverse('recipe:ingredient-detail', args=[ingredient_id])
