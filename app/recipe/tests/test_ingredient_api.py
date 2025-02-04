@@ -20,6 +20,10 @@ def create_ingredient(**params):
     """Create and return a new ingredient"""
     return Ingredient.objects.create(**params)
 
+def detail_url(ingredient_id):
+    """Return ingredient detail URL"""
+    return reverse('recipe:ingredient-detail', args=[ingredient_id])
+
 
 class PublicIngredientAPITest(TestCase):
     """Test unathenticated ingredients requests"""
@@ -65,3 +69,15 @@ class PrivateIngredientAPITest(TestCase):
         self.assertEqual(len(res.data), 1)
         self.assertEqual(res.data[0]['name'], ingredient.name)
         self.assertEqual(res.data[0]['id'], ingredient.id)
+
+    def test_update_ingredient(self):
+        """Test updating an ingredient"""
+        ingredient = create_ingredient(user=self.user, name='Maggi')
+        payload = {'name': 'Curry'}
+
+        url = detail_url(ingredient.id)
+        self.client.patch(url, payload)
+
+        ingredient.refresh_from_db()
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(ingredient.name, payload['name'])
