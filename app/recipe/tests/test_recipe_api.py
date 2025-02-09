@@ -354,7 +354,7 @@ class PrivateRecipeAPITest(TestCase):
         ingredients = recipe.ingredients.all()
 
         for ingredient in payload['ingredients']:
-            self.assertIn(Ingredient.objects.get(name=ingredient.name, user=self.user), ingredients)
+            self.assertIn(Ingredient.objects.get(name=ingredient['name'], user=self.user), ingredients)
 
     def test_assign_ingredients_on_update(self):
         """Test assigning existing ingredient to a recipe on update"""
@@ -373,7 +373,7 @@ class PrivateRecipeAPITest(TestCase):
         self.assertEqual(ingredients.count(), 2)
 
         for ingredient in payload['ingredients']:
-            self.assertIn(Ingredient.objects.get(name=ingredient.name, user=self.user), ingredients)
+            self.assertIn(Ingredient.objects.get(name=ingredient['name'], user=self.user), ingredients)
 
     def test_clear_recipe_ingredients(self):
         """Test clearing recipe ingredients"""
