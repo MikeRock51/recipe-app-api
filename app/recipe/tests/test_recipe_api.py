@@ -343,7 +343,7 @@ class PrivateRecipeAPITest(TestCase):
         """Test that new ingredients are created on update"""
         recipe = create_recipe(user=self.user)
         url = get_recipe_detail_url(recipe.id)
-        payload = {'ingredients': [{ 'name': 'Gbegiri'}, { 'name': 'Locust Beans'}]}
+        payload = {'ingredients': [{'name': 'Gbegiri'}, {'name': 'Locust Beans'}]}
 
         res = self.client.patch(url, payload, format='json')
         self.assertEqual(res.status_code, status.HTTP_200_OK)
