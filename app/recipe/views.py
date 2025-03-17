@@ -6,10 +6,33 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from drf_spectacular.utils import (
+    extend_schema,
+    extend_schema_view,
+    OpenApiParameter,
+    OpenApiTypes
+)
+
 from core.models import Recipe, Tag, Ingredient
 from recipe import serializers
 
 
+@extend_schema_view(
+    list=extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name='tags',
+                type=OpenApiTypes.STR,
+                description='A comma separated list of tag IDs to filter by'
+            ),
+            OpenApiParameter(
+                name='ingredients',
+                type=OpenApiTypes.STR,
+                description='A comma separated list of ingredient IDs to filter by'
+            )
+        ]
+    )
+)
 class RecipeViewSet(viewsets.ModelViewSet):
     """Viewset to manage the recipe API"""
     serializer_class = serializers.RecipeDetailSerializer
