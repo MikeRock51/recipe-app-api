@@ -12,7 +12,10 @@ from recipe.serializers import TagSerializer
 from recipe.tests.utils import (
     create_recipe,
     create_tag,
-    create_user
+    create_user,
+    drop_users,
+    drop_tags,
+    drop_recipes
 )
 
 TAGS_URL = reverse('recipe:tag-list')
@@ -34,11 +37,15 @@ class PublicTagTests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
+    def tearDown(self):
+        drop_tags()
+        drop_users()
+
 
 class PrivateTagTests(TestCase):
     """Tests authenticated tags API requests"""
     def setUp(self):
-        self.user = create_user(email='taguser@email.com', password='TestPassword')
+        self.user = create_user(email='tagtest@email.com', password='Password1234')
         self.client = APIClient()
         self.client.force_authenticate(self.user)
 
@@ -129,3 +136,8 @@ class PrivateTagTests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(len(res.data), 1)
+
+    def tearDown(self):
+        drop_tags()
+        drop_users()
+        drop_recipes()

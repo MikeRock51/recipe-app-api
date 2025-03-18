@@ -22,7 +22,11 @@ from recipe.tests.utils import (
     create_recipe,
     create_tag,
     create_user,
-    TEST_RECIPE
+    TEST_RECIPE,
+    drop_recipes,
+    drop_tags,
+    drop_ingredients,
+    drop_users
 )
 
 RECIPES_URL = reverse("recipe:recipe-list")
@@ -49,6 +53,10 @@ class PublicRecipeAPITest(TestCase):
         res = self.client.get(RECIPES_URL)
 
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def tearDown(self):
+        Recipe.objects.all().delete()
+        drop_users()
 
 
 class PrivateRecipeAPITest(TestCase):
@@ -420,6 +428,12 @@ class PrivateRecipeAPITest(TestCase):
         self.assertIn(s2.data, res.data)
         self.assertNotIn(s3.data, res.data)
 
+    def tearDown(self):
+        drop_tags()
+        drop_users()
+        drop_recipes()
+        drop_ingredients()
+
 
 class RecipeImageUploadTest(TestCase):
     """Test image upload for recipes"""
@@ -432,6 +446,8 @@ class RecipeImageUploadTest(TestCase):
 
     def tearDown(self):
         self.recipe.image.delete()
+        drop_users()
+        drop_recipes()
 
     def test_upload_image(self):
         """Test sucessful image upload for a recipe"""

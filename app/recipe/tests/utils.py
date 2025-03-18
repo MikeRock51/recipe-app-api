@@ -12,7 +12,7 @@ TEST_RECIPE = {
 }
 
 TEST_USER = {
-    "email": "test@email.com",
+    "email": "testone@email.com",
     "password": "TestPassword123"
 }
 
@@ -53,3 +53,19 @@ def create_user(**params):
     default.update(params)
 
     return get_user_model().objects.create_user(**default)
+
+def drop_users():
+    """Delete all users from the test db"""
+    get_user_model().objects.all().delete()
+
+def drop_recipes():
+    """Delete all recipes from the test db"""
+    Recipe.objects.all().delete()
+
+def drop_tags():
+    """Delete all tags from the test db"""
+    Tag.objects.all().delete()
+
+def drop_ingredients():
+    """Delete all ingredients from the test db"""
+    Ingredient.objects.all().delete()

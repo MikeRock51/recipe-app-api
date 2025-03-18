@@ -1,6 +1,5 @@
 """Ingredient testing module"""
 
-from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.test import TestCase
 
@@ -16,7 +15,10 @@ from recipe.serializers import IngredientSerializer
 from recipe.tests.utils import (
     create_recipe,
     create_ingredient,
-    create_user
+    create_user,
+    drop_ingredients,
+    drop_users,
+    drop_recipes
 )
 
 INGREDIENTS_URL = reverse('recipe:ingredient-list')
@@ -36,6 +38,10 @@ class PublicIngredientAPITest(TestCase):
         """Test that authentication is required for access"""
         res = self.client.get(INGREDIENTS_URL)
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def tearDown(self):
+        drop_users()
+        drop_recipes()
 
 
 class PrivateIngredientAPITest(TestCase):
@@ -94,7 +100,7 @@ class PrivateIngredientAPITest(TestCase):
         self.assertEqual(Ingredient.objects.filter(id=ingredient.id).count(), 0)
 
     def test_filter_assigned(self):
-        """Test filtering ingeridients by those assigned to a recipe"""
+        """Test filtering ingredients by those assigned to a recipe"""
         ing1 = create_ingredient(user=self.user, name='Onion')
         ing2 = create_ingredient(user=self.user, name='Locust Beans')
         recipe = create_recipe(user=self.user, title='Noodles')
@@ -127,5 +133,10 @@ class PrivateIngredientAPITest(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(len(res.data), 1)
+
+    def tearDown(self):
+        drop_ingredients()
+        drop_users()
+        drop_recipes()
 
 
