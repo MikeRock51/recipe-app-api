@@ -121,18 +121,18 @@ class PrivateTagTests(TestCase):
 
     def test_unique_filtered_tags(self):
         """Test filtered tags are unique"""
+        drop_tags()
         tag = create_tag(user=self.user, name="Lunch")
         create_tag(user=self.user, name='Brunch')
-        recipe1 = create_recipe(user=self.user, title='Coffee and Bread')
-        recipe2 = create_recipe(user=self.user, title='Minimie')
+
+        recipe1 = create_recipe(user=self.user, title='Coffee and Bread', tags=[])
+        recipe2 = create_recipe(user=self.user, title='Minimie', tags=[])
 
         recipe1.tags.add(tag)
         recipe2.tags.add(tag)
-
         params = {'assigned_only': 1}
-        res = self.client.get(TAGS_URL, params)
 
-        print(res.data, "RES!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        res = self.client.get(TAGS_URL, params)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(len(res.data), 1)

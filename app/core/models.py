@@ -83,6 +83,9 @@ class Tag(models.Model):
         on_delete=models.CASCADE,
     )
 
+    class Meta:
+        unique_together = ('user', 'name')
+
     def __str__(self):
         return self.name
 
