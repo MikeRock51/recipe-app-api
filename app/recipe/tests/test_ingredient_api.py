@@ -138,5 +138,3 @@ class PrivateIngredientAPITest(TestCase):
         drop_ingredients()
         drop_users()
         drop_recipes()
-
-

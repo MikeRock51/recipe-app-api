@@ -39,13 +39,16 @@ def create_recipe(user, **params):
 
     return recipe
 
+
 def create_tag(**params):
     """Creates and returns a new tag"""
     return Tag.objects.create(**params)
 
+
 def create_ingredient(**params):
     """Create and return a new ingredient"""
     return Ingredient.objects.create(**params)
+
 
 def create_user(**params):
     """Creates a test user"""
@@ -54,17 +57,21 @@ def create_user(**params):
 
     return get_user_model().objects.create_user(**default)
 
+
 def drop_users():
     """Delete all users from the test db"""
     get_user_model().objects.all().delete()
+
 
 def drop_recipes():
     """Delete all recipes from the test db"""
     Recipe.objects.all().delete()
 
+
 def drop_tags():
     """Delete all tags from the test db"""
     Tag.objects.all().delete()
+
 
 def drop_ingredients():
     """Delete all ingredients from the test db"""
