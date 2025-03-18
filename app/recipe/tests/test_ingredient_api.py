@@ -13,14 +13,13 @@ from core.models import Ingredient
 
 from recipe.serializers import IngredientSerializer
 
-from recipe.tests.test_recipe_api import create_user, create_recipe
+from recipe.tests.utils import (
+    create_recipe,
+    create_ingredient,
+    create_user
+)
 
 INGREDIENTS_URL = reverse('recipe:ingredient-list')
-
-
-def create_ingredient(**params):
-    """Create and return a new ingredient"""
-    return Ingredient.objects.create(**params)
 
 
 def detail_url(ingredient_id):

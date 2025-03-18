@@ -1,6 +1,5 @@
 """Test module for the recipe API"""
 
-from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
@@ -19,17 +18,14 @@ from recipe.serializers import (
     RecipeDetailSerializer,
 )
 
-from recipe.tests.test_tag_api import create_tag
+from recipe.tests.utils import (
+    create_recipe,
+    create_tag,
+    create_user,
+    TEST_RECIPE
+)
 
 RECIPES_URL = reverse("recipe:recipe-list")
-
-TEST_RECIPE = {
-    "title": "Pounded Yam and Efo Riro",
-    "time_minutes": 45,
-    "price": Decimal("99.99"),
-    "description": "Delicious meal",
-    "link": "https://www.youtube.com/watch?v=8hMuhCKyhuA",
-}
 
 
 def get_recipe_detail_url(id):
@@ -40,28 +36,6 @@ def get_recipe_detail_url(id):
 def image_upload_url(recipe_id):
     """Return URL for recipe image upload"""
     return reverse("recipe:recipe-upload-image", args=[recipe_id])
-
-
-def create_recipe(user, **params):
-    """Creates a test recipe with default or given params"""
-    default = TEST_RECIPE.copy()  # Create a copy to avoid modifying the original
-    default.update(params)
-
-    # Remove tags if present since we can't directly assign them
-    tags = default.pop('tags', [])
-    recipe = Recipe.objects.create(user=user, **default)
-
-    # Add tags if any were provided
-    for tag in tags:
-        tag_obj, _ = Tag.objects.get_or_create(user=user, **tag)
-        recipe.tags.add(tag_obj)
-
-    return recipe
-
-
-def create_user(**params):
-    """Creates a test user"""
-    return get_user_model().objects.create_user(**params)
 
 
 class PublicRecipeAPITest(TestCase):
